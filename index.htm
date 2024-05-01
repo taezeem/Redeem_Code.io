@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Redeem Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        #codeDisplay {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        #codeList {
+            list-style: none;
+            padding: 0;
+        }
+
+        #codeList li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Redeem Code Generator</h1>
+        <button id="startBtn" onclick="startGenerating()">Start Generating</button>
+        <button id="stopBtn" onclick="stopGenerating()" disabled>Stop Generating</button>
+        <ul id="codeList"></ul>
+        <button onclick="downloadCodes()">Download Codes</button>
+    </div>
+
+    <script>
+        var generatingInterval;
+        var codeCounter = 0;
+
+        function startGenerating() {
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            generatingInterval = setInterval(generateCode, 500); // Generate every 500 milliseconds
+        }
+
+        function stopGenerating() {
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            clearInterval(generatingInterval);
+        }
+
+        function generateCode() {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var codeLength = 16;
+            var code = '';
+
+            for (var i = 0; i < codeLength; i++) {
+                var randomIndex = Math.floor(Math.random() * characters.length);
+                code += characters[randomIndex];
+            }
+
+            codeCounter++;
+            var codeListItem = document.createElement('li');
+            codeListItem.textContent = codeCounter + '. ' + code;
+            document.getElementById('codeList').appendChild(codeListItem);
+
+            // Store the generated code
+            localStorage.setItem('generatedCode' + codeCounter, code);
+        }
+
+        function downloadCodes() {
+            var codeList = '';
+            for (var i = 1; i <= codeCounter; i++) {
+                var generatedCode = localStorage.getItem('generatedCode' + i);
+                if (generatedCode) {
+                    codeList += generatedCodeCounter + '. ' + generatedCode + '\n';
+                }
+            }
+
+            if (codeList) {
+                var blob = new Blob([codeList], { type: 'text/plain' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'generated_codes.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert('No codes generated yet.');
+            }
+        }
+    </script>
+</body>
+</html>
