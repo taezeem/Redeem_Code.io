@@ -11,7 +11,6 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             max-width: 600px;
             margin: 50px auto;
@@ -20,12 +19,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
+        h1 { text-align: center; color: #333; }
         button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -36,29 +30,10 @@
             margin-top: 20px;
             margin-right: 10px;
         }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        p {
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        #codeDisplay {
-            font-weight: bold;
-            color: #007bff;
-        }
-
-        #codeList {
-            list-style: none;
-            padding: 0;
-        }
-
-        #codeList li {
-            margin-bottom: 5px;
-        }
+        button:hover { background-color: #0056b3; }
+        p { font-size: 18px; margin-top: 20px; }
+        #codeList { list-style: none; padding: 0; }
+        #codeList li { margin-bottom: 5px; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -71,13 +46,13 @@
     </div>
 
     <script>
-        var generatingInterval;
-        var codeCounter = 0;
+        let generatingInterval;
+        let codeCounter = 0;
 
         function startGenerating() {
             document.getElementById('startBtn').disabled = true;
             document.getElementById('stopBtn').disabled = false;
-            generatingInterval = setInterval(generateCode, 500); // Generate every 500 milliseconds
+            generatingInterval = setInterval(generateCode, 500);
         }
 
         function stopGenerating() {
@@ -87,37 +62,31 @@
         }
 
         function generateCode() {
-            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            var codeLength = 16;
-            var code = '';
-
-            for (var i = 0; i < codeLength; i++) {
-                var randomIndex = Math.floor(Math.random() * characters.length);
-                code += characters[randomIndex];
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 16; i++) {
+                code += chars[Math.floor(Math.random() * chars.length)];
             }
 
             codeCounter++;
-            var codeListItem = document.createElement('li');
-            codeListItem.textContent = codeCounter + '. ' + code;
-            document.getElementById('codeList').appendChild(codeListItem);
+            const li = document.createElement('li');
+            li.textContent = codeCounter + '. ' + code;
+            document.getElementById('codeList').appendChild(li);
 
-            // Store the generated code
             localStorage.setItem('generatedCode' + codeCounter, code);
         }
 
         function downloadCodes() {
-            var codeList = '';
-            for (var i = 1; i <= codeCounter; i++) {
-                var generatedCode = localStorage.getItem('generatedCode' + i);
-                if (generatedCode) {
-                    codeList += generatedCodeCounter + '. ' + generatedCode + '\n';
-                }
+            let codeListText = '';
+            for (let i = 1; i <= codeCounter; i++) {
+                const code = localStorage.getItem('generatedCode' + i);
+                if (code) codeListText += i + '. ' + code + '\n';
             }
 
-            if (codeList) {
-                var blob = new Blob([codeList], { type: 'text/plain' });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
+            if (codeListText) {
+                const blob = new Blob([codeListText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
                 a.href = url;
                 a.download = 'generated_codes.txt';
                 document.body.appendChild(a);
